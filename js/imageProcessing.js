@@ -54,6 +54,5 @@
             $.error( 'Метод ' + method + ' не существует в плагине jQuery.imageProcessing' );
         }
     };
-    $('img').imageProcessing();
 })( jQuery );
 
