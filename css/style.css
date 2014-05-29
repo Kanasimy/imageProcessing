@@ -1,0 +1,19 @@
+
+html {
+	height:100%;
+}
+
+body {
+	height:100%;
+}
+article, aside, details, figcaption, figure, footer,header,
+hgroup, menu, nav, section { display: block; }
+
+td {
+	width:500px;
+	padding:5px;
+}
+td img
+{
+	width:100%;
+}

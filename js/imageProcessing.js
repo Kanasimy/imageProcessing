@@ -3,7 +3,7 @@
  */
 (function( $ ){
     var methods = {
-        imageProcessing : function(img) {
+        imageProcessing : function(img,self) {
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');
             canvas.width = img.width;
@@ -13,46 +13,47 @@
             for(var y = 0; y < imgPixels.height; y++){
                 for(var x = 0; x < imgPixels.width; x++){
                     var i = (y * 4) * imgPixels.width + x * 4;
-                    var avg = (imgPixels.data[i]*2 + imgPixels.data[i + 1]*2 + imgPixels.data[i + 2]*1.5) / 3;
+                    var avg = (imgPixels.data[i]*1 + imgPixels.data[i + 1]*1 + imgPixels.data[i + 2]*1) / 3;
                     imgPixels.data[i] = avg;
                     imgPixels.data[i + 1] = avg;
                     imgPixels.data[i + 2] = avg;
                 }
             }
             ctx.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
-            console.log(canvas.toDataURL());
-
-           // $('.profile #social_buttons i').css('backgroundImage','url('+canvas.toDataURL()+')');
+            console.log(self);
+            $(self).parent().html('<img src="'+canvas.toDataURL()+'"/>');
 
             return canvas.toDataURL();
         },
-        getImg : function(src) {
+        getImg : function(self) {
             var img = new Image();
-            img.src = src;
+            img.src = self.attr('src');
             img.onload = img.onerror = function() {
                 if (!this.executed) {
                     this.executed = true;
-                    methods.imageProcessing(img);
+                    methods.imageProcessing(img,self);
                 }
             };
         },
         init : function() {
-            var src = '/res/images/login/social.png';
-            methods.getImg(src);
+           return this.each(function(){
+               self = $(this);
+               methods.getImg(self);
+            });
+
         }
     };
 
     $.fn.imageProcessing = function(method) {
-        // логика вызова метода
+        var self;
         if ( methods[method] ) {
             return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
         } else if ( typeof method === 'object' || ! method ) {
             return methods.init.apply( this, arguments );
         } else {
-            $.error( 'Метод ' +  methods + ' не существует для jQuery.grey' );
+            $.error( 'РњРµС‚РѕРґ ' + method + ' РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚ РІ РїР»Р°РіРёРЅРµ jQuery.imageProcessing' );
         }
     };
-
+    $('img').imageProcessing();
 })( jQuery );
 
-$('.profile #social_buttons li').imageProcessing();
