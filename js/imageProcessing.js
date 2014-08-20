@@ -2,8 +2,13 @@
  * Created by uzich on 28.05.14.
  */
 (function( $ ){
+    var settings = {
+        'hover': 'true'
+    };
+
     var methods = {
-        imageProcessing : function(img,self) {
+        imageProcessing : function(img,self,options) {
+            settings = $.extend( settings, options);
             var canvas = document.createElement('canvas');
             var ctx = canvas.getContext('2d');
             canvas.width = img.width;
@@ -20,8 +25,11 @@
                 }
             }
             ctx.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
-            console.log(self);
-            $(self).parent().html('<img src="'+canvas.toDataURL()+'"/>');
+            if(settings.hover){
+                $(self).parent().append('<img class="grey" src="'+canvas.toDataURL()+'"/>');
+            }
+            else {$(self).parent().html('<img src="'+canvas.toDataURL()+'"/>');}
+
 
             return canvas.toDataURL();
         },
@@ -37,14 +45,15 @@
         },
         init : function() {
            return this.each(function(){
-               self = $(this);
-               methods.getImg(self);
+                self = $(this);
+                methods.getImg(self);
             });
+
 
         }
     };
 
-    $.fn.imageProcessing = function(method) {
+    $.fn.imageProcessing = function(method, options) {
         var self;
         if ( methods[method] ) {
             return methods[method].apply( this, Array.prototype.slice.call( arguments, 1 ));
